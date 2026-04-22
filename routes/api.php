@@ -20,23 +20,25 @@ Route::get('/user', function (Request $request) {
 // });
 
 
-
 Route::get('/agentis-test', function () {
     try {
-        $agent = app(AgentisAgent::class);
+        $start    = microtime(true);
+        $agent    = app(AgentisAgent::class);
 
         $response = $agent->prompt(
-            "Give me Matilde Ferry product details and let me know which user is associate with this perticular product.",
+            'Give me Matilde Ferry product details and let me know which user is associated with this particular product.',
             provider: config('agentis.provider')
         );
 
-        // Access like an array — NOT $response->structured()
+        $totalMs = round((microtime(true) - $start) * 1000);
+
         return response()->json([
-            'success'     => true,
-            'answer'      => $response['answer'],
-            'sql'         => $response['sql'],
-            'count'       => $response['count'],
-            'explanation' => $response['explanation'],
+            'success'       => true,
+            'answer'        => $response['answer'],
+            'sql'           => $response['sql'],
+            'count'         => $response['count'],
+            'explanation'   => $response['explanation'],
+            'total_time_ms' => $totalMs,
         ]);
     } catch (\Exception $e) {
         return response()->json([
