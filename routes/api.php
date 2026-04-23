@@ -9,24 +9,13 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-// Route::get('/agentis-test', function () {
-//     $agent    = app(AgentisAgent::class);
-//     $response = $agent->prompt(
-//         'How many users signed up this month?',
-//         provider: config('agentis.provider')  // 'gemini'
-//     );
-
-//     return response()->json($response);
-// });
-
-
 Route::get('/agentis-test', function () {
     try {
         $start    = microtime(true);
         $agent    = app(AgentisAgent::class);
 
         $response = $agent->prompt(
-            'Give me Matilde Ferry product details and let me know which user is associated with this particular product.',
+            'Give "Holly Baumbach MD" and her profile details.',
             provider: config('agentis.provider')
         );
 

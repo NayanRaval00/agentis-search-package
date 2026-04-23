@@ -3,7 +3,8 @@
 return [
 
     'provider' => env('AGENTIS_PROVIDER', 'gemini'),
-
+    'max_rows' => 100,
+    'cache_ttl' => 60,
     /*
     |--------------------------------------------------------------------------
     | Tables exposed to the AI
@@ -18,6 +19,18 @@ return [
             'searchable' => ['id', 'name', 'sku', 'price', 'stock', 'description', 'user_id', 'created_at'],
             'label'      => 'Products catalog',
         ],
+        'posts' => [
+            'searchable' => ['id', 'title', 'content', 'user_id', 'created_at'],
+            'label'      => 'Posts catalog',
+        ],
+        'comments' => [
+            'searchable' => ['id', 'body', 'user_id', 'created_at'],
+            'label'      => 'Comments catalog',
+        ],
+        'profiles' => [
+            'searchable' => ['id', 'user_id', 'bio', 'avatar_url', 'created_at'],
+            'label'      => 'Profiles catalog',
+        ],
     ],
 
     /*
@@ -27,13 +40,8 @@ return [
     */
     'relationships' => [
         'products.user_id → users.id',
+        'posts.user_id → users.id',
+        'comments.user_id → users.id',
+        'profiles.user_id → users.id',
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Query limits — safety + performance
-    |--------------------------------------------------------------------------
-    */
-    'max_rows'    => 100,   // AI will never return more than this
-    'cache_ttl'   => 60,    // seconds — cache identical queries
 ];
