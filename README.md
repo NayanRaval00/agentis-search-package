@@ -13,10 +13,30 @@ php artisan vendor:publish --tag=querypilot-config
 
 ```php
 use QueryPilot\Facades\QueryPilot;
+ try {
+        $start  = microtime(true);
+        $agent  = app(QueryPilotAgent::class);
 
-$response = QueryPilot::prompt('Show me users who signed up this month');
+        $response = $agent->prompt(
+            request('q',  'Give me first record of user table'),
+            provider: config('querypilot.provider')
+        );
 
-return response()->json($response['rows']);
+        return response()->json([
+            'success'       => true,
+            'answer'        => $response['answer'] ?? '',
+            'table'         => $response['table'] ?? '',
+            'count'         => $response['count'] ?? '',
+            'rows'          => $response['rows'] ?? [],
+            'total_time_ms' => round((microtime(true) - $start) * 1000),
+        ]);
+    } catch (Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error'   => $e->getMessage(),
+        ], 500);
+    }
+
 ```
 
 ## Features
